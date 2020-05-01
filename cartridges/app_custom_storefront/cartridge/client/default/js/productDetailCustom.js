@@ -47,6 +47,7 @@ function updateAvailability(e, response) {
 }
 
 $(document).ready(function () {
+	console.log("__DEBUG__: prodcutDetailCustom.js loaded")
 	$("body")
 		.off("product:updateAvailability")
 		.on("product:updateAvailability", updateAvailability)
