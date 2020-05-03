@@ -2,6 +2,7 @@
 	"name": "app_custom_storefront",
 	"version": "0.0.1",
 	"description": "New overlay cartridge",
+	"author": "taehyunlim",
 	"main": "index.js",
 	"scripts": {
 		"lint": "sgmf-scripts --lint js && sgmf-scripts --lint css",
