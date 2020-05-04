@@ -17,7 +17,7 @@ module.exports = {
 				dataType: "json",
 				data: $form.serialize(),
 				success: function (data) {
-					$form.spinner().stop
+					$form.spinner().stop()
 					if (!data.success) {
 						formValidation($form, data)
 					} else {
