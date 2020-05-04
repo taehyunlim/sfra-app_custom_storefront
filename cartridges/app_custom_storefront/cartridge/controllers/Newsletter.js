@@ -33,44 +33,46 @@ server.post(
 
 		// perform server-side validation before this point
 		if (newsletterForm.valid) {
-			var Transaction = require("dw/system/Transaction")
-			try {
-				Transaction.wrap(function () {
-					var CustomObject = CustomObjectMgr.createCustomObject(
-						"NewsletterSubscription",
-						newsletterForm.email.value
-					)
-					CustomObject.custom.firstName = newsletterForm.fname.value
-					CustomObject.custom.lastName = newsletterForm.lname.value
+			this.on("route:BeforeComplete", function (req, res) {
+				var Transaction = require("dw/system/Transaction")
+				try {
+					Transaction.wrap(function () {
+						var CustomObject = CustomObjectMgr.createCustomObject(
+							"NewsletterSubscription",
+							newsletterForm.email.value
+						)
+						CustomObject.custom.firstName = newsletterForm.fname.value
+						CustomObject.custom.lastName = newsletterForm.lname.value
 
-					res.json({
-						success: true,
-						redirectUrl: URLUtils.url("Newsletter-Success").toString()
+						res.json({
+							success: true,
+							redirectUrl: URLUtils.url("Newsletter-Success").toString()
+						})
 					})
-				})
-			} catch (e) {
-				var err = e
-				if (err.javaName === "MetaDataException") {
-					// Duplicate primary key on CO: send back message to client-side, but don't log error.
-					res.json({
-						success: false,
-						error: [
-							Resource.msg("error.subscriptionexists", "newsletter", null)
-						]
-					})
-				} else {
-					// Missing CO definition: Log error with message for site admin, set the response to error and send error page URL to client
-					var Logger = require("dw/system/Logger")
-					Logger.getLogger("newsletter subscription").error(
-						Resource.msg("error.customobjectmissing", newsletter, null)
-					)
-					res.setStatusCode(500)
-					res.json({
-						error: true,
-						redirectUrl: URLUtils.url("Error-Start").toString()
-					})
+				} catch (e) {
+					var err = e
+					if (err.javaName === "MetaDataException") {
+						// Duplicate primary key on CO: send back message to client-side, but don't log error.
+						res.json({
+							success: false,
+							error: [
+								Resource.msg("error.subscriptionexists", "newsletter", null)
+							]
+						})
+					} else {
+						// Missing CO definition: Log error with message for site admin, set the response to error and send error page URL to client
+						var Logger = require("dw/system/Logger")
+						Logger.getLogger("newsletter subscription").error(
+							Resource.msg("error.customobjectmissing", newsletter, null)
+						)
+						res.setStatusCode(500)
+						res.json({
+							error: true,
+							redirectUrl: URLUtils.url("Error-Start").toString()
+						})
+					}
 				}
-			}
+			})
 		} else {
 			// Show server-side validation errors
 			res.setStatusCode(500)
