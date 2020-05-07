@@ -1,0 +1,16 @@
+{
+	"query": {
+		"bool_query": {
+			"must": [
+				{
+					"term_query": {
+						"fields": ["site_id"],
+						"operator": "is",
+						"values": ["RefArch"]
+					}
+				}
+			]
+		}
+	},
+	"select": "(**)"
+}
