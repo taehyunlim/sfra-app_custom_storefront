@@ -4,6 +4,7 @@ var server = require("server")
 var Resource = require("dw/web/Resource")
 var URLUtils = require("dw/web/URLUtils")
 var csrfProtection = require("*/cartridge/scripts/middleware/csrf")
+var logger = require("dw/system/Logger").getLogger("co.newsletter")
 
 server.get(
 	"Start",
@@ -49,10 +50,20 @@ server.post(
 							redirectUrl: URLUtils.url("Newsletter-Success").toString()
 						})
 					})
+					// Testing logger
+					logger.debug(
+						"[Newsletter] Testing Debugger - successful entry: {}",
+						newsletterForm.email.value
+					)
 				} catch (e) {
 					var err = e
 					if (err.javaName === "MetaDataException") {
 						// Duplicate primary key on CO: send back message to client-side, but don't log error.
+						// Testing logger
+						logger.debug(
+							"[Newsletter] Testing Debugger - duplicate primary key: {}",
+							newsletterForm.email.value
+						)
 						res.json({
 							success: false,
 							error: [
@@ -61,8 +72,7 @@ server.post(
 						})
 					} else {
 						// Missing CO definition: Log error with message for site admin, set the response to error and send error page URL to client
-						var Logger = require("dw/system/Logger")
-						Logger.getLogger("newsletter subscription").error(
+						logger.error(
 							Resource.msg("error.customobjectmissing", newsletter, null)
 						)
 						res.setStatusCode(500)
