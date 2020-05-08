@@ -4,7 +4,10 @@ var server = require("server")
 var Resource = require("dw/web/Resource")
 var URLUtils = require("dw/web/URLUtils")
 var csrfProtection = require("*/cartridge/scripts/middleware/csrf")
-var logger = require("dw/system/Logger").getLogger("co.newsletter")
+var logger = require("dw/system/Logger").getLogger(
+	"co_newsletter", // custom log fileNamePrefix
+	"co.newsletter" // category
+)
 
 server.get(
 	"Start",
